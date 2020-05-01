@@ -13,6 +13,7 @@
 %token <value> ID
 %token <value> NUM
 %token <value> ERR
+%token <value> BOOLVAL
 
 %token LET "let"
 %token IN "in"
@@ -70,8 +71,8 @@ Decl : Type ID "(" FormalList1 ")" "{" Stmt0 "}"    {  $$ = new TypeDeclaration(
   | "void" ID "(" FormalList1 ")" "{" Stmt0 "}"		{  $$ = new VoidDeclaration($2,new FormalList($4),$7); $$.SetLocation(@1); }
   ;
 
-Type : "int"				{ $$ = new IntStatement(); $$.SetLocation(@1); }
-  | "bool"					{ $$ = new BoolStatement(); $$.SetLocation(@1); }
+Type : "int"				{ $$ = new IntType(); $$.SetLocation(@1); }
+  | "bool"					{ $$ = new BoolType(); $$.SetLocation(@1); }
   ;
 
 FormalList1 : FormalList2   { $$ = $1; }
@@ -115,23 +116,23 @@ Expr1 : ID "=" Expr1		{ $$ = new AssignStatement($1, $3); $$.SetLocation(@1); }
   | Expr2					{ $$ = $1; }
   ;
 
-Expr2 :  Expr2 "||" Expr3   { $$ = new OrStatement($1, $3);  $$.SetLocation(@1);}
+Expr2 :  Expr2 "||" Expr3   { $$ = new BinOperatorStatement(BinOperatorStatement.Type.OR, $1, $3);  $$.SetLocation(@1);}
   | Expr3					{ $$ = $1; }
   ;
 
-Expr3 : Expr3 "&&" Expr4	{ $$ = new AndStatement($1, $3);  $$.SetLocation(@1);}
+Expr3 : Expr3 "&&" Expr4	{ $$ = new BinOperatorStatement(BinOperatorStatement.Type.AND, $1, $3);  $$.SetLocation(@1);}
   | Expr4					{ $$ = $1; }
   ;
 
-Expr4 : Expr4 "==" Expr5	{ $$ = new EqStatement($1, $3);  $$.SetLocation(@1);}
-  | Expr4 "!=" Expr5		{ $$ = new NotEqStatement($1, $3);  $$.SetLocation(@1);}
+Expr4 : Expr4 "==" Expr5	{ $$ = new BinOperatorStatement(BinOperatorStatement.Type.EQ, $1, $3);  $$.SetLocation(@1);}
+  | Expr4 "!=" Expr5		{ $$ = new BinOperatorStatement(BinOperatorStatement.Type.NEQ, $1, $3);  $$.SetLocation(@1);}
   | Expr5					{ $$ = $1; }
   ;
 
-Expr5 : Expr5 "<" Expr6		{ $$ = new LesserStatement($1, $3); $$.SetLocation(@1); }
-  | Expr5 ">" Expr6			{ $$ = new GreaterStatement($1, $3); $$.SetLocation(@1); }
-  | Expr5 "<=" Expr6		{ $$ = new LEqStatement($1, $3); $$.SetLocation(@1); }
-  | Expr5 ">=" Expr6		{ $$ = new GEqStatement($1, $3); $$.SetLocation(@1); }
+Expr5 : Expr5 "<" Expr6		{ $$ = new BinOperatorStatement(BinOperatorStatement.Type.LE, $1, $3); $$.SetLocation(@1); }
+  | Expr5 ">" Expr6			{ $$ = new BinOperatorStatement(BinOperatorStatement.Type.GR, $1, $3); $$.SetLocation(@1); }
+  | Expr5 "<=" Expr6		{ $$ = new BinOperatorStatement(BinOperatorStatement.Type.LEQ, $1, $3); $$.SetLocation(@1); }
+  | Expr5 ">=" Expr6		{ $$ = new BinOperatorStatement(BinOperatorStatement.Type.GEQ, $1, $3); $$.SetLocation(@1); }
   | Expr6					{ $$ = $1; }
   ;
 
@@ -151,10 +152,9 @@ Expr8 : "!" Expr8			{ $$ = new NotStatement($2); $$.SetLocation(@1); }
   ;
 
 Expr9 : "int"				{ $$ = new IntStatement(); $$.SetLocation(@1);}
-  | "true"					{ $$ = new TrueStatement(); $$.SetLocation(@1);}	
-  | "false"					{ $$ = new FalseStatement(); $$.SetLocation(@1);}
+  | BOOLVAL					{ $$ = new BoolStatement($1); $$.SetLocation(@1);}	
   | NUM						{ $$ = new NumStatement($1); $$.SetLocation(@1);}
-  | "(" Expr1 ")"			{ $$ = new BracketStatement($2); $$.SetLocation(@1); }
+  | "(" Expr1 ")"			{ $$ = $2; }
   | Expr10					{ $$ = $1; }
   ;
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Lab2
 {
@@ -30,26 +31,25 @@ namespace Lab2
                     }
 
                     string source = input.ReadToEnd();
-                    //var source = @"";
-                    var program = Syntax.ParserUtility.Parse(source);
-                    if (program != null)
-                    {
-                        var pretty = program.Pretty();
-                        //Console.WriteLine(pretty);
-                        program = Syntax.ParserUtility.Parse(pretty);
-                        var newPretty = program.Pretty();
-                        //Console.WriteLine(newPretty);
-                        if (newPretty.Equals(pretty))
-                            Console.WriteLine("True");
-                        else
-                        {
+                    
 
-                            Console.WriteLine("False");
-                        }
-                    }
+                    var program = Syntax.ParserUtility.Parse(source);
+                    var pretty = program.Pretty();
+                    var strip_origi = source.Replace(" ", "");
+                    strip_origi = strip_origi.Replace("\n", "");
+                    strip_origi = strip_origi.Replace("\r", "");
+                    strip_origi = strip_origi.Replace("\r\n", "");
+                    strip_origi = strip_origi.Replace(Environment.NewLine, "");
+
+                    var strip_pretty = pretty.Replace(" ", "");
+                    strip_pretty = strip_pretty.Replace("\n", "");
+
+                    var new_pretty = Syntax.ParserUtility.Parse(source).Pretty();
+
+                    if (strip_origi.Equals(strip_pretty) && pretty.Equals(new_pretty))
+                        Console.WriteLine("True");
                     else
                     {
-
                         Console.WriteLine("False");
                     }
 
@@ -61,147 +61,138 @@ namespace Lab2
             }
             else
             {
-                var source = @"void A8(int O2)
+                String source = @"int j43()
 {
-  if (!8)
   {
-    SOq;
+    return MZG(false, RG);
+    bool f3a;
+    bool h;
   }
-  else
+}
+int uG()
+{
+}
+bool Z(int QIg, bool H, bool ek)
+{
   {
     {
+    }
+    if (true)
+    {
+    }
+    else
+    {
+      if (!(-yfJ||!-true))
       {
-        if (om = k5 = -qy(-(FT>bq(-70, tKa)), -(sc(hzx, t = false)/O(67, m = m = Au2 = (x = m)&&R(KuJ(), -(-true&&807)))&&-FE8(false)), gag = r8l = YY = true))
+        return j;
+        bool D;
+      }
+      else
+      {
+      }
+    }
+    bool sx;
+  }
+  while (Bl = fE(4, Fda = false, kwl())/T3Q(J*25, p8A, -Ga(((vCx = 6)!=true)-(!237-okW))))
+  {
+    bool qWA;
+    {
+      {
+        if (o = Fn(Rj))
         {
-          T0z;
-          if (-F)
+          false;
           {
+            while (c)
             {
-              if (386)
-              {
-                if (8)
-                {
-                  {
-                    bool dW;
-                  }
-                }
-                else
-                {
-                  return !o(mTb = K = --fW7(33));
-                }
-                return in(true, WX(!false), WAU = 82)!=Fb();
-                while (false)
-                {
-                }
-              }
-              else
-              {
-              }
-              return (HgY = 4)+true;
-              if (86<406)
-              {
-                while (false)
-                {
-                }
-                {
-                  while (IP)
-                  {
-                    {
-                    }
-                    GfL;
-                  }
-                  if (uH)
-                  {
-                    {
-                      {
-                        {
-                          int HSI;
-                          {
-                            bool SKb;
-                            while (G = Z)
-                            {
-                              while (true)
-                              {
-                              }
-                              int mF;
-                            }
-                            lo;
-                          }
-                        }
-                        while ((-false||621)+!!13)
-                        {
-                          {
-                          }
-                        }
-                        6;
-                      }
-                      {
-                        return SiX = (x = VR)==FN;
-                      }
-                    }
-                    {
-                    }
-                  }
-                  else
-                  {
-                    return f;
-                  }
-                }
-              }
-              else
-              {
-                while (H0)
-                {
-                }
-              }
+              int s8;
             }
-            int EdH;
           }
-          else
-          {
-          }
-        }
-        else
-        {
-        }
-        {
-          !!GJ;
-        }
-        if (false)
-        {
-          while (w = false)
-          {
-            bool Q;
-          }
+          return !y(oI(), 5)==true;
         }
         else
         {
         }
       }
+      int d;
     }
   }
-  return th3;
-}
-int hg(bool FI, int pgP, bool k4p)
-{
+  if (m(85==175, false, f))
+  {
+    {
+      if (aI()+727||false)
+      {
+        while (76)
+        {
+          {
+            return V00*((2<=!Hnr(rn, true, IW = FD))+(y = tc = Aks)>Iu);
+            while (J(K, jSV, false))
+            {
+              {
+                {
+                  false;
+                  false;
+                  return i = -81;
+                }
+                while (n())
+                {
+                  return I = !(j = false);
+                  while (h(WJJ = false))
+                  {
+                    {
+                      while (FdP(XlM(t), v(true, Q||Mq(171, !131, ZY = V), Hg = -J(-((h = j(true))-WV), false, rVx = yL(false)))))
+                      {
+                        6;
+                        int czb;
+                      }
+                      bool Z;
+                      return I;
+                    }
+                  }
+                  {
+                    return false;
+                    tWD(((e4T(xv(true, Q(-false), true), 64, false)>=K)-D(true==true))*(u = Hh<=(JWp = Uq)));
+                  }
+                }
+              }
+            }
+          }
+        }
+        while (-da(mHV = true, -(T!=ZUZ(NH = Kv = cUF, k(false<(h = 60)), !false))))
+        {
+        }
+      }
+      else
+      {
+      }
+    }
+    int fV;
+    4;
+  }
+  else
   {
   }
 }";
-                var program = Syntax.ParserUtility.Parse(source);
+                
+                    var program = Syntax.ParserUtility.Parse(source);
                 if (program != null)
                 {
                     var pretty = program.Pretty();
-                    Console.WriteLine(pretty);
-                    program = Syntax.ParserUtility.Parse(pretty);
-                    var newPretty = program.Pretty();
-                    Console.WriteLine("**************************************************");
-                    Console.WriteLine(newPretty);
-                    if (newPretty.Equals(pretty))
+                    var strip_origi = source.Replace(" ", "");
+                    strip_origi = strip_origi.Replace(Environment.NewLine, "");
+
+                    var strip_pretty = pretty.Replace(" ", "");
+                    strip_pretty = strip_pretty.Replace("\n", "");
+
+                    var new_pretty = Syntax.ParserUtility.Parse(source).Pretty();
+
+                    if (strip_origi.Equals(strip_pretty) && pretty.Equals(new_pretty))
                         Console.WriteLine("True");
                     else
                     {
                         Console.WriteLine("False");
                     }
+
+
                 }
                 else
                 {

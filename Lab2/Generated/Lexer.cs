@@ -5,10 +5,10 @@
 //  See accompanying file GPLEXcopyright.rtf.
 //
 //  GPLEX Version:  1.2.2
-//  Machine:  DESKTOP-UBEVP6I
-//  DateTime: 12/24/2019 12:42:05 AM
-//  UserName: JovanJuriÄ‡
-//  GPLEX input file <Lexer.l - 12/24/2019 12:41:59 AM>
+//  Machine:  DESKTOP-BURIB4I
+//  DateTime: 4/30/2020 6:47:21 PM
+//  UserName: jovan
+//  GPLEX input file <Lexer.l - 4/30/2020 6:31:32 PM>
 //  GPLEX frame file <embedded resource>
 //
 //  Option settings: parser, minimize
@@ -958,7 +958,7 @@ return (int) Tokens.WHILE;
 return (int) Tokens.VOID;
             break;
         case 42:
-return (int) Tokens.TRUE;
+yylval.value = yytext; return (int) Tokens.BOOLVAL;
             break;
         case 47:
 return (int) Tokens.RETURN;
@@ -970,7 +970,7 @@ return (int) Tokens.IF;
 return (int) Tokens.INT;
             break;
         case 54:
-return (int) Tokens.FALSE;
+yylval.value = yytext; return (int) Tokens.BOOLVAL;
             break;
         case 57:
 return (int) Tokens.ELSE;

@@ -1,19 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="Current">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <Platforms>AnyCPU;x86</Platforms>
+    <FileUpgradeFlags>40</FileUpgradeFlags>
+    <UpgradeBackupLocation>D:\Fax\Compilers\Lab2\Backup\Lab2\</UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <Folder Include="Generated\" />
   </ItemGroup>
-
   <ItemGroup>
     <Reference Include="QUT.ShiftReduceParser">
       <HintPath>QUT.ShiftReduceParser.dll</HintPath>
     </Reference>
   </ItemGroup>
-
 </Project>

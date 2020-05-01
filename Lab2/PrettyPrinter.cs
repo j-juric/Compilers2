@@ -65,6 +65,14 @@ namespace Syntax
         }
     }
 
+    public partial class BoolStatement : Statement
+    {
+        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
+        {
+            builder.Append(this.value.ToString().ToLower());
+        }
+    }
+
     public partial class BracketStatement : Statement
     {
        
@@ -81,20 +89,36 @@ namespace Syntax
     {
         static Dictionary<Type, string> Operators =
                     new Dictionary<Type, string>()
-         {
-            {Type.ADD, "+" },
-            {Type.DIV, "/" },
-            {Type.MUL, "*" },
-            {Type.SUB, "-" }
-          };
+                    {
+                        {Type.ADD, "+" },
+                        {Type.DIV, "/" },
+                        {Type.MUL, "*" },
+                        {Type.SUB, "-" },
+                        {Type.AND, "&&" },
+                        {Type.OR, "||" },
+                        {Type.GR, ">" },
+                        {Type.LE, "<" },
+                        {Type.LEQ, "<=" },
+                        {Type.GEQ, ">=" },
+                        {Type.EQ, "==" },
+                        {Type.NEQ, "!=" }
+                    };
 
         static Dictionary<Type, int> Precedences =
             new Dictionary<Type, int>()
             {
-                {Type.ADD, 7},
-                {Type.SUB, 7},
-                {Type.DIV, 8},
-                {Type.MUL, 8}
+                {Type.ADD, 6},
+                {Type.SUB, 6},
+                {Type.DIV, 7},
+                {Type.MUL, 7},
+                {Type.AND, 3 },
+                {Type.OR, 2 },
+                {Type.GR, 5 },
+                {Type.LE, 5 },
+                {Type.LEQ, 5 },
+                {Type.GEQ, 5 },
+                {Type.EQ, 4 },
+                {Type.NEQ, 4 }
             };
 
         enum Associativity { Left, Right, Both }
@@ -102,10 +126,18 @@ namespace Syntax
         static Dictionary<Type, Associativity> Associativities =
             new Dictionary<Type, Associativity>()
             {
-                {Type.ADD, Associativity.Both},
+                {Type.ADD, Associativity.Left},
                 {Type.SUB, Associativity.Left},
                 {Type.DIV, Associativity.Left},
-                {Type.MUL, Associativity.Both}
+                {Type.MUL, Associativity.Left},
+                {Type.AND, Associativity.Left },
+                {Type.OR, Associativity.Left },
+                {Type.GR, Associativity.Left },
+                {Type.LE, Associativity.Left },
+                {Type.LEQ, Associativity.Left },
+                {Type.GEQ, Associativity.Left },
+                {Type.EQ, Associativity.Left },
+                {Type.NEQ, Associativity.Left }
             };
         public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
         {
@@ -331,9 +363,21 @@ namespace Syntax
     {
         public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
         {
+            var needsParenthesis = outerPrecedence > 1 ||
+                    opposite && (outerPrecedence == 1);
+
+            if (needsParenthesis)
+            {
+                builder.Append("(");
+            }
             builder.Append(id);
             builder.Append(" = ");
             s.Pretty(builder, 1, false);
+
+            if (needsParenthesis)
+            {
+                builder.Append(")");
+            }
             //if (outerPrecedence == 0)
             //{
             //    builder.Append(" ;");
@@ -341,191 +385,24 @@ namespace Syntax
         }
     }
 
-    public partial class OrStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            var needsParenthesis = outerPrecedence > 2;
-
-            if (needsParenthesis)
-            {
-                builder.Append("(");
-            }
-
-            s1.Pretty(builder, 2, false);
-            builder.Append("||");
-            s2.Pretty(builder, 2, false);
-
-            if (needsParenthesis)
-            {
-                builder.Append(")");
-            }
-        }
-    }
-    public partial class AndStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            var needsParenthesis = outerPrecedence > 3;
-
-            if (needsParenthesis)
-            {
-                builder.Append("(");
-            }
-
-            s1.Pretty(builder, 3, false);
-            builder.Append("&&");
-            s2.Pretty(builder, 3, false);
-
-            if (needsParenthesis)
-            {
-                builder.Append(")");
-            }
-        }
-    }
-    public partial class EqStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            var needsParenthesis = outerPrecedence > 4;
-
-            if (needsParenthesis)
-            {
-                builder.Append("(");
-            }
-
-            s1.Pretty(builder, 4, false);
-            builder.Append("==");
-            s2.Pretty(builder, 4, false);
-
-            if (needsParenthesis)
-            {
-                builder.Append(")");
-            }
-        }
-    }
-    public partial class NotEqStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            var needsParenthesis = outerPrecedence > 4;
-
-            if (needsParenthesis)
-            {
-                builder.Append("(");
-            }
-
-            s1.Pretty(builder, 4, false);
-            builder.Append("!=");
-            s2.Pretty(builder, 4, false);
-
-            if (needsParenthesis)
-            {
-                builder.Append(")");
-            }
-        }
-    }
-    public partial class LesserStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            var needsParenthesis = outerPrecedence > 5;
-
-            if (needsParenthesis)
-            {
-                builder.Append("(");
-            }
-
-            s1.Pretty(builder, 5, false);
-            builder.Append("<");
-            s2.Pretty(builder, 5, false);
-
-            if (needsParenthesis)
-            {
-                builder.Append(")");
-            }
-        }
-    }
-    public partial class GreaterStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            var needsParenthesis = outerPrecedence > 5;
-
-            if (needsParenthesis)
-            {
-                builder.Append("(");
-            }
-
-            s1.Pretty(builder, 5, false);
-            builder.Append(">");
-            s2.Pretty(builder, 5, false);
-
-            if (needsParenthesis)
-            {
-                builder.Append(")");
-            }
-        }
-    }
-    public partial class LEqStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            var needsParenthesis = outerPrecedence > 5;
-
-            if (needsParenthesis)
-            {
-                builder.Append("(");
-            }
-
-            s1.Pretty(builder, 5, false);
-            builder.Append("<=");
-            s2.Pretty(builder, 5, false);
-
-            if (needsParenthesis)
-            {
-                builder.Append(")");
-            }
-        }
-    }
-    public partial class GEqStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            var needsParenthesis = outerPrecedence > 5;
-
-            if (needsParenthesis)
-            {
-                builder.Append("(");
-            }
-
-            s1.Pretty(builder, 5, false);
-            builder.Append(">=");
-            s2.Pretty(builder, 5, false);
-
-            if (needsParenthesis)
-            {
-                builder.Append(")");
-            }
-        }
-    }
+    
 
     public partial class NotStatement : Statement
     {
         public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
         {
-            //var needsParenthesis = outerPrecedence > 5;
+            var needsParenthesis = outerPrecedence > 9;
 
             builder.Append("!");
-            //if (needsParenthesis)
-            //{
-            //    builder.Append("(");
-            //}
-            s1.Pretty(builder, 5, false);
-            //if (needsParenthesis)
-            //{
-            //    builder.Append(")");
-            //}
+            if (needsParenthesis)
+            {
+                builder.Append("(");
+            }
+            s1.Pretty(builder, 9, false);
+            if (needsParenthesis)
+            {
+                builder.Append(")");
+            }
         }
     }
 
@@ -533,46 +410,32 @@ namespace Syntax
     {
         public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
         {
-            //var needsParenthesis = outerPrecedence > 5;
+            var needsParenthesis = outerPrecedence > 9;
 
             builder.Append("-");
-            //if (needsParenthesis)
-            //{
-            //    builder.Append("(");
-            //}
-            s1.Pretty(builder, 5, false);
-            //if (needsParenthesis)
-            //{
-            //    builder.Append(")");
-            //}
+            if (needsParenthesis)
+            {
+                builder.Append("(");
+            }
+            s1.Pretty(builder, 9, false);
+            if (needsParenthesis)
+            {
+                builder.Append(")");
+            }
         }
     }
-    public partial class IntStatement : Type
+    public partial class IntType : Type
     {
         public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
         {
             builder.Append("int");
         }
     }
-    public partial class BoolStatement : Type
+    public partial class BoolType : Type
     {
         public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
         {
             builder.Append("bool");
-        }
-    }
-    public partial class TrueStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            builder.Append("true");
-        }
-    }
-    public partial class FalseStatement : Statement
-    {
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            builder.Append("false");
         }
     }
 

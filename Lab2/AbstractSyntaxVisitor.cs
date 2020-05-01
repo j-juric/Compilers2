@@ -26,20 +26,11 @@ namespace Syntax
         Result Visit(Return rreturn);
         Result Visit(VoidReturn voidReturn);
         Result Visit(AssignStatement assignStatement);
-        Result Visit(OrStatement orStatement);
-        Result Visit(AndStatement andStatement);
-        Result Visit(NotEqStatement notEqStatement);
-        Result Visit(EqStatement eqStatement);
-        Result Visit(LesserStatement lesserStatement);
-        Result Visit(GreaterStatement greaterStatement);
-        Result Visit(LEqStatement leqStatement);
-        Result Visit(GEqStatement geqStatement);
         Result Visit(NotStatement notStatement);
         Result Visit(NegativeStatement negativeStatement);
         Result Visit(IntStatement intStatement);
         Result Visit(BoolStatement boolStatement);
-        Result Visit(TrueStatement trueStatement);
-        Result Visit(FalseStatement falseStatement);
+
         Result Visit(Type type);
     }
 
@@ -210,64 +201,6 @@ namespace Syntax
 
     }
 
-    public partial class OrStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-
-    }
-    public partial class AndStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-    public partial class EqStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-    public partial class NotEqStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-
-    public partial class LesserStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-    public partial class GreaterStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-    public partial class LEqStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-    public partial class GEqStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
 
     public partial class NotStatement : Statement
     {
@@ -283,28 +216,22 @@ namespace Syntax
             return visitor.Visit(this);
         }
     }
-    public partial class IntStatement : Type
+    public partial class IntType : Type
     {
         override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
         {
             return visitor.Visit(this);
         }
     }
-    public partial class BoolStatement : Type
+    public partial class BoolType : Type
     {
         override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
         {
             return visitor.Visit(this);
         }
     }
-    public partial class TrueStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
-    public partial class FalseStatement : Statement
+
+    public partial class BoolStatement : Statement
     {
         override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
         {

@@ -36,18 +36,18 @@ namespace Evaluator
             return null;
         }
 
-        public Void Visit(LetStatement letStatement, SortedSet<string> free)
-        {
-            letStatement.Expr1.Accept(this, free);
+        //public Void Visit(LetStatement letStatement, SortedSet<string> free)
+        //{
+        //    letStatement.Expr1.Accept(this, free);
 
-            var bodyFree = new SortedSet<string>();
-            letStatement.Expr2.Accept(this, bodyFree);
-            bodyFree.Remove(letStatement.Id);
+        //    var bodyFree = new SortedSet<string>();
+        //    letStatement.Expr2.Accept(this, bodyFree);
+        //    bodyFree.Remove(letStatement.Id);
 
-            free.UnionWith(bodyFree);
+        //    free.UnionWith(bodyFree);
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public Void Visit(IfStatement ifStatement, SortedSet<string> free)
         {
@@ -65,32 +65,32 @@ namespace Evaluator
             return null;
         }
 
-        public Void Visit(LambdaStatement lambdaStatement, SortedSet<string> free)
-        {
-            var bodyFree = new SortedSet<string>();
-            lambdaStatement.Body.Accept(this, bodyFree);
-            bodyFree.Remove(lambdaStatement.Id);
+        //public Void Visit(LambdaStatement lambdaStatement, SortedSet<string> free)
+        //{
+        //    var bodyFree = new SortedSet<string>();
+        //    lambdaStatement.Body.Accept(this, bodyFree);
+        //    bodyFree.Remove(lambdaStatement.Id);
 
-            free.UnionWith(bodyFree);
+        //    free.UnionWith(bodyFree);
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        public Void Visit(ApplicationStatement applicationStatement, SortedSet<string> free)
-        {
-            applicationStatement.Function.Accept(this, free);
-            applicationStatement.Argument.Accept(this, free);
+        //public Void Visit(ApplicationStatement applicationStatement, SortedSet<string> free)
+        //{
+        //    applicationStatement.Function.Accept(this, free);
+        //    applicationStatement.Argument.Accept(this, free);
 
-            return null;
-        }
+        //    return null;
+        //}
 
-        public Void Visit(TupleStatement tupleStatement, SortedSet<string> free)
-        {
-            tupleStatement.Expr1.Accept(this, free);
-            tupleStatement.Expr2.Accept(this, free);
+        //public Void Visit(TupleStatement tupleStatement, SortedSet<string> free)
+        //{
+        //    tupleStatement.Expr1.Accept(this, free);
+        //    tupleStatement.Expr2.Accept(this, free);
 
-            return null;
-        }
+        //    return null;
+        //}
 
         public Void Visit(ListStatement listStatement, SortedSet<string> free)
         {
@@ -211,70 +211,7 @@ namespace Evaluator
             return null;
         }
 
-        public Void Visit(OrStatement orStatement, SortedSet<string> free)
-        {
-            orStatement.s1.Accept(this, free);
-            orStatement.s2.Accept(this, free);
-
-            return null;
-
-        }
-
-        public Void Visit(AndStatement andStatement, SortedSet<string> free)
-        {
-            andStatement.s1.Accept(this, free);
-            andStatement.s2.Accept(this, free);
-
-            return null;
-        }
-
-        public Void Visit(NotEqStatement notEqStatement, SortedSet<string> free)
-        {
-            notEqStatement.s1.Accept(this, free);
-            notEqStatement.s2.Accept(this, free);
-
-            return null;
-        }
-
-        public Void Visit(EqStatement eqStatement, SortedSet<string> free)
-        {
-            eqStatement.s1.Accept(this, free);
-            eqStatement.s2.Accept(this, free);
-
-            return null;
-        }
-
-        public Void Visit(LesserStatement lesserStatement, SortedSet<string> free)
-        {
-            lesserStatement.s1.Accept(this, free);
-            lesserStatement.s2.Accept(this, free);
-
-            return null;
-        }
-
-        public Void Visit(GreaterStatement greaterStatement, SortedSet<string> free)
-        {
-            greaterStatement.s1.Accept(this, free);
-            greaterStatement.s2.Accept(this, free);
-
-            return null;
-        }
-
-        public Void Visit(LEqStatement leqStatement, SortedSet<string> free)
-        {
-            leqStatement.s1.Accept(this, free);
-            leqStatement.s2.Accept(this, free);
-
-            return null;
-        }
-
-        public Void Visit(GEqStatement geqStatement, SortedSet<string> free)
-        {
-            geqStatement.s1.Accept(this, free);
-            geqStatement.s2.Accept(this, free);
-
-            return null;
-        }
+    
 
         public Void Visit(NotStatement notStatement, SortedSet<string> free)
         {
@@ -300,15 +237,6 @@ namespace Evaluator
             return null;
         }
 
-        public Void Visit(TrueStatement trueStatement, SortedSet<string> free)
-        {
-            return null;
-        }
-
-        public Void Visit(FalseStatement falseStatement, SortedSet<string> free)
-        {
-            return null;
-        }
 
         public Void Visit(Syntax.Type type, SortedSet<string> free)
         {

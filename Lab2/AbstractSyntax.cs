@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using Lab2;
 
 namespace Syntax
 {
-
     public class Locatable
     {
         public int line, column;
@@ -32,7 +32,6 @@ namespace Syntax
             return builder.ToString();
         }
     }
-
     //
     public partial class DeclarationSequence : Declaration
     {
@@ -72,21 +71,7 @@ namespace Syntax
 
     }
 
-    public partial class NumStatement : Statement
-    {
-        public int num;
 
-        public NumStatement(string num)
-        {
-            this.num = Convert.ToInt32(num);
-            complexStatement = false;
-        }
-
-        public  void ToString(StringBuilder builder)
-        {
-            builder.Append(num.ToString());
-        }
-    }
 
     public partial class BracketStatement : Statement
     {
@@ -104,7 +89,7 @@ namespace Syntax
         public Statement left;
         public Statement right;
 
-        public enum Type { ADD, SUB, MUL, DIV }
+        public enum Type { ADD, SUB, MUL, DIV, OR, AND, EQ, NEQ, LE, GR, LEQ, GEQ }
 
         public BinOperatorStatement(Type type, Statement left, Statement right)
         {
@@ -130,8 +115,8 @@ namespace Syntax
 
     public partial class FormalList : Statement
     {
-        public List<Statement> list;
-        public FormalList(List<Statement> list)
+        public List<Argument> list;
+        public FormalList(List<Argument> list)
         {
             this.list = list;        
         }
@@ -144,8 +129,6 @@ namespace Syntax
 
 
     }
-
-
 
     public partial class Argument : Statement 
     {
@@ -175,6 +158,7 @@ namespace Syntax
         }
 
     }
+
     public partial class VoidDeclaration : Declaration
     {
         public string id;
@@ -291,96 +275,6 @@ namespace Syntax
 
     }
 
-    public partial class OrStatement : Statement
-    {
-        public Statement s1;
-        public Statement s2;
-        public OrStatement(Statement s1, Statement s2)
-        {
-            this.s1 = s1;
-            this.s2 = s2;
-        }
-
-    }
-    public partial class AndStatement : Statement
-    {
-        public Statement s1;
-        public Statement s2;
-        public AndStatement(Statement s1, Statement s2)
-        {
-            this.s1 = s1;
-            this.s2 = s2;
-        }
-
-    }
-    public partial class EqStatement : Statement
-    {
-        public Statement s1;
-        public Statement s2;
-        public EqStatement(Statement s1, Statement s2)
-        {
-            this.s1 = s1;
-            this.s2 = s2;
-        }
-
-    }
-    public partial class NotEqStatement : Statement
-    {
-        public Statement s1;
-        public Statement s2;
-        public NotEqStatement(Statement s1, Statement s2)
-        {
-            this.s1 = s1;
-            this.s2 = s2;
-        }
-
-    }
-
-    public partial class LesserStatement : Statement
-    {
-        public Statement s1;
-        public Statement s2;
-        public LesserStatement(Statement s1, Statement s2)
-        {
-            this.s1 = s1;
-            this.s2 = s2;
-        }
-
-    }
-    public partial class GreaterStatement : Statement
-    {
-        public Statement s1;
-        public Statement s2;
-        public GreaterStatement(Statement s1, Statement s2)
-        {
-            this.s1 = s1;
-            this.s2 = s2;
-        }
-
-    }
-    public partial class LEqStatement : Statement
-    {
-        public Statement s1;
-        public Statement s2;
-        public LEqStatement(Statement s1, Statement s2)
-        {
-            this.s1 = s1;
-            this.s2 = s2;
-        }
-
-    }
-    public partial class GEqStatement : Statement
-    {
-        public Statement s1;
-        public Statement s2;
-        public GEqStatement(Statement s1, Statement s2)
-        {
-            this.s1 = s1;
-            this.s2 = s2;
-        }
-
-    }
-
     public partial class NotStatement : Statement
     {
         public Statement s1;
@@ -390,6 +284,7 @@ namespace Syntax
         }
 
     }
+
     public partial class NegativeStatement : Statement
     {
         public Statement s1;
@@ -399,11 +294,12 @@ namespace Syntax
         }
 
     }
-    public partial class IntStatement : Type
+
+    public partial class IntType : Type
     {
-        public IntStatement()
+        public IntType()
         {
-            this.name = "";
+            this.name = "int";
         }
 
         public override string ToString()
@@ -411,30 +307,49 @@ namespace Syntax
             return this.name;
         }
     }
-    public partial class BoolStatement : Type
-    {
 
-        public BoolStatement()
+    public partial class BoolType : Type
+    {
+        public BoolType()
         {
             this.name = "bool";
         }
-        public  void ToString(StringBuilder builder)
+        public void ToString(StringBuilder builder)
         {
             builder.Append(name);
         }
-        public override string ToString()
+        public string ToString()
         {
             return this.name;
         }
     }
-    public partial class TrueStatement : Statement
+
+    public partial class BoolStatement : Statement 
     {
-
-
+        public bool value;
+        public BoolStatement(string name) {
+            this.value = Convert.ToBoolean(name);
+        }
+        public void ToString(StringBuilder builder)
+        {
+            builder.Append(value.ToString());
+        }
     }
-    public partial class FalseStatement : Statement
-    {
 
+    public partial class NumStatement : Statement
+    {
+        public int num;
+
+        public NumStatement(string num)
+        {
+            this.num = Convert.ToInt32(num);
+            complexStatement = false;
+        }
+
+        public void ToString(StringBuilder builder)
+        {
+            builder.Append(num.ToString());
+        }
     }
 
     public partial class Type : Statement

@@ -132,7 +132,7 @@ namespace Evaluator
         {
             for (var i = 0; i < formalList.list.Count; i++)
             {
-                formalList.list[i] = formalList.list[i].Accept(this);
+                formalList.list[i] = (Argument) formalList.list[i].Accept(this);
             }
 
             return formalList;
@@ -201,69 +201,7 @@ namespace Evaluator
             return assignStatement;
         }
 
-        public Statement Visit(OrStatement orStatement)
-        {
-            orStatement.s1 = orStatement.s1.Accept(this);
-            orStatement.s2 = orStatement.s2.Accept(this);
-
-            return orStatement;
-        }
-
-        public Statement Visit(AndStatement andStatement)
-        {
-            andStatement.s1 = andStatement.s1.Accept(this);
-            andStatement.s2 = andStatement.s2.Accept(this);
-
-            return andStatement;
-        }
-
-        public Statement Visit(NotEqStatement notEqStatement)
-        {
-            notEqStatement.s1 = notEqStatement.s1.Accept(this);
-            notEqStatement.s2 = notEqStatement.s2.Accept(this);
-
-            return notEqStatement;
-        }
-
-        public Statement Visit(EqStatement eqStatement)
-        {
-            eqStatement.s1 = eqStatement.s1.Accept(this);
-            eqStatement.s2 = eqStatement.s2.Accept(this);
-
-            return eqStatement;
-        }
-
-        public Statement Visit(LesserStatement lesserStatement)
-        {
-            lesserStatement.s1 = lesserStatement.s1.Accept(this);
-            lesserStatement.s2 = lesserStatement.s2.Accept(this);
-
-            return lesserStatement;
-        }
-
-        public Statement Visit(GreaterStatement greaterStatement)
-        {
-            greaterStatement.s1 = greaterStatement.s1.Accept(this);
-            greaterStatement.s2 = greaterStatement.s2.Accept(this);
-
-            return greaterStatement;
-        }
-
-        public Statement Visit(LEqStatement leqStatement)
-        {
-            leqStatement.s1 = leqStatement.s1.Accept(this);
-            leqStatement.s2 = leqStatement.s2.Accept(this);
-
-            return leqStatement;
-        }
-
-        public Statement Visit(GEqStatement geqStatement)
-        {
-            geqStatement.s1 = geqStatement.s1.Accept(this);
-            geqStatement.s2 = geqStatement.s2.Accept(this);
-
-            return geqStatement;
-        }
+      
 
         public Statement Visit(NotStatement notStatement)
         {
@@ -289,15 +227,7 @@ namespace Evaluator
             return boolStatement;
         }
 
-        public Statement Visit(TrueStatement trueStatement)
-        {
-            return trueStatement;
-        }
-
-        public Statement Visit(FalseStatement falseStatement)
-        {
-            return falseStatement;
-        }
+      
 
         public Statement Visit(Syntax.Type type)
         {

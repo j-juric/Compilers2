@@ -23,20 +23,10 @@ namespace Syntax
         Result Visit(Return rreturn,AArgmnt arg);
         Result Visit(VoidReturn voidReturn,AArgmnt arg);
         Result Visit(AssignStatement assignStatement,AArgmnt arg);
-        Result Visit(OrStatement orStatement,AArgmnt arg);
-        Result Visit(AndStatement andStatement,AArgmnt arg);
-        Result Visit(NotEqStatement notEqStatement,AArgmnt arg);
-        Result Visit(EqStatement eqStatement,AArgmnt arg);
-        Result Visit(LesserStatement lesserStatement,AArgmnt arg);
-        Result Visit(GreaterStatement greaterStatement,AArgmnt arg);
-        Result Visit(LEqStatement leqStatement,AArgmnt arg);
-        Result Visit(GEqStatement geqStatement,AArgmnt arg);
         Result Visit(NotStatement notStatement,AArgmnt arg);
         Result Visit(NegativeStatement negativeStatement,AArgmnt arg);
         Result Visit(IntStatement intStatement,AArgmnt arg);
         Result Visit(BoolStatement boolStatement,AArgmnt arg);
-        Result Visit(TrueStatement trueStatement,AArgmnt arg);
-        Result Visit(FalseStatement falseStatement,AArgmnt arg);
         Result Visit(Type type,AArgmnt arg);
     }
 
@@ -207,64 +197,7 @@ namespace Syntax
 
     }
 
-    public partial class OrStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-
-    }
-    public partial class AndStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
-    public partial class EqStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
-    public partial class NotEqStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
-
-    public partial class LesserStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
-    public partial class GreaterStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
-    public partial class LEqStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
-    public partial class GEqStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
+   
 
     public partial class NotStatement : Statement
     {
@@ -287,27 +220,14 @@ namespace Syntax
             return visitor.Visit(this,arg);
         }
     }
-    public partial class BoolStatement : Type
+    public partial class BoolStatement : Statement
     {
         override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
         {
             return visitor.Visit(this,arg);
         }
     }
-    public partial class TrueStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
-    public partial class FalseStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
+
 
     public partial class Type : Statement
     {

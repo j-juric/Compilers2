@@ -38,13 +38,12 @@ alphanum    {alpha}|{digit}
 "while"			{ return (int) Tokens.WHILE; }
 "return"		{ return (int) Tokens.RETURN; }
 "void"			{ return (int) Tokens.VOID; }
-"true"			{ return (int) Tokens.TRUE; }
-"false"			{ return (int) Tokens.FALSE; }
 "int"			{ return (int) Tokens.INT; }
 "bool"			{ return (int) Tokens.BOOL; }
 
 
-
+"true"	{ yylval.value = yytext; return (int) Tokens.BOOLVAL;}
+"false" { yylval.value = yytext; return (int) Tokens.BOOLVAL;}
 {alpha}{alphanum}*      { yylval.value = yytext;
                           return (int) Tokens.ID; 
                         }
