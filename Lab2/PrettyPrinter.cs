@@ -73,17 +73,6 @@ namespace Syntax
         }
     }
 
-    public partial class BracketStatement : Statement
-    {
-       
-        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
-        {
-            builder.Append("(");
-            if (stmt != null)
-                stmt.Pretty(builder, 0, false);
-            builder.Append(")");
-        }
-    }
 
     public partial class BinOperatorStatement : Statement
     {

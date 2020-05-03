@@ -43,9 +43,14 @@ namespace Lab2
 
                     var strip_pretty = pretty.Replace(" ", "");
                     strip_pretty = strip_pretty.Replace("\n", "");
+                    strip_pretty = strip_pretty.Replace("\r", "");
+                    strip_pretty = strip_pretty.Replace("\r\n", "");
 
                     var new_pretty = Syntax.ParserUtility.Parse(source).Pretty();
 
+
+                    // strip_origi.Equals(strip_pretty) Checks for the 1st requirement  strip(p) == strip(pretty(parse(p)))
+                    //pretty.Equals(new_pretty) Checks for the 2nd requirement pretty(parse(p)) == pretty(parse(pretty(parse(p))))
                     if (strip_origi.Equals(strip_pretty) && pretty.Equals(new_pretty))
                         Console.WriteLine("True");
                     else

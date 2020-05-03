@@ -72,17 +72,6 @@ namespace Syntax
     }
 
 
-
-    public partial class BracketStatement : Statement
-    {
-        public Statement stmt;
-        public BracketStatement(Statement stmt)
-        {
-            this.stmt = stmt;
-            complexStatement = false;
-        }
-    }
-
     public partial class BinOperatorStatement : Statement
     {
         public Type type;
@@ -231,6 +220,26 @@ namespace Syntax
         }
 
 
+    }
+
+    public partial class IntStatement:Statement
+    {
+        public IntStatement() { }
+
+        public override Result Accept<Result, AArgmnt>(IExpressionVisitorWithArguments<Result, AArgmnt> visitor, AArgmnt arg)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Result Accept<Result>(IExpressionVisitor<Result> visitor)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Pretty(PrettyBuilder builder, int outerPrecedence, bool opposite)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public partial class RegularStatement : Statement

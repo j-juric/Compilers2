@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Text;
 using System.Collections.Generic;
+using QUT.Gppg;
 
 namespace Syntax
 {
@@ -10,7 +11,7 @@ namespace Syntax
         Result Visit(SequenceStatement sequenceStatement);
         Result Visit(IdentifierStatement identifierStatement);
         Result Visit(NumStatement numStatement);
-        Result Visit(BracketStatement bracketStatement);
+        Result Visit(BlockStatement blockStatement);
         Result Visit(BinOperatorStatement binOperatorStatement);
         Result Visit(ListStatement listStatement);
         Result Visit(FormalList formalList);
@@ -21,14 +22,14 @@ namespace Syntax
         Result Visit(IfStatement ifStatement);
         Result Visit(IfElseStatement ifElseStatement);
         Result Visit(WhileStatement whileStatement);
-        Result Visit(BlockStatement blockStatement);
         Result Visit(RegularStatement regularStatement);
         Result Visit(Return rreturn);
         Result Visit(VoidReturn voidReturn);
         Result Visit(AssignStatement assignStatement);
         Result Visit(NotStatement notStatement);
         Result Visit(NegativeStatement negativeStatement);
-        Result Visit(IntStatement intStatement);
+        Result Visit(IntType intType);
+        Result Visit(BoolType boolType);
         Result Visit(BoolStatement boolStatement);
 
         Result Visit(Type type);
@@ -55,6 +56,14 @@ namespace Syntax
         }
     }
 
+    public partial class BlockStatement : Statement
+    {
+        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
+        {
+            return visitor.Visit(this);
+        }
+    }
+
     public partial class IdentifierStatement : Statement
     {
         override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
@@ -71,13 +80,6 @@ namespace Syntax
         }
     }
 
-    public partial class BracketStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
 
     public partial class BinOperatorStatement : Statement
     {
@@ -160,13 +162,6 @@ namespace Syntax
         }
     }
 
-    public partial class BlockStatement : Statement
-    {
-        override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
-        {
-            return visitor.Visit(this);
-        }
-    }
 
     public partial class RegularStatement : Statement
     {

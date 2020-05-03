@@ -7,6 +7,7 @@ namespace Evaluator
 {
     class DesugarState
     {
+        Dictionary<string, int> VariableDict = new Dictionary<string, int>();
         Stack<Tuple<string, int>> UnShadowStack = new Stack<Tuple<string, int>>();
 
         int FindShadow(string variable)
@@ -70,6 +71,12 @@ namespace Evaluator
             return numberStatement;
         }
 
+        public Statement Visit(BlockStatement blockStatement)
+        {
+            blockStatement.stmt.Accept(this);
+            return null;
+        }
+
         public Statement Visit(BinOperatorStatement binaryOperatorStatement)
         {
             binaryOperatorStatement.left = binaryOperatorStatement.left.Accept(this);
@@ -121,12 +128,6 @@ namespace Evaluator
             return declarationSequence;
         }
 
-        public Statement Visit(BracketStatement bracketStatement)
-        {
-            bracketStatement.stmt = bracketStatement.stmt.Accept(this);
-
-            return bracketStatement;
-        }
 
         public Statement Visit(FormalList formalList)
         {
@@ -167,12 +168,6 @@ namespace Evaluator
             return voidDeclaration;
         }
 
-        public Statement Visit(BlockStatement blockStatement)
-        {
-            blockStatement.stmt = blockStatement.stmt.Accept(this);
-
-            return blockStatement;
-        }
 
         public Statement Visit(RegularStatement regularStatement)
         {
@@ -205,29 +200,31 @@ namespace Evaluator
 
         public Statement Visit(NotStatement notStatement)
         {
-            notStatement.s1 = notStatement.s1.Accept(this);
+            notStatement.s1.Accept(this);
 
-            return notStatement;
+            return null;
         }
 
         public Statement Visit(NegativeStatement negativeStatement)
         {
-            negativeStatement.s1 = negativeStatement.s1.Accept(this);
+            negativeStatement.s1.Accept(this);
 
-            return negativeStatement;
+            return null;
         }
 
-        public Statement Visit(IntStatement intStatement) //mozda je bag
+        public Statement Visit(IntType intType) //mozda je bag
         {
-            return intStatement;
+            return null;
+        }        
+        public Statement Visit(BoolType boolType) //mozda je bag
+        {
+            return null;
         }
 
         public Statement Visit(BoolStatement boolStatement)
         {
             return boolStatement;
-        }
-
-      
+        }  
 
         public Statement Visit(Syntax.Type type)
         {

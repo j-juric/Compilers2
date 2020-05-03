@@ -36,19 +36,6 @@ namespace Evaluator
             return null;
         }
 
-        //public Void Visit(LetStatement letStatement, SortedSet<string> free)
-        //{
-        //    letStatement.Expr1.Accept(this, free);
-
-        //    var bodyFree = new SortedSet<string>();
-        //    letStatement.Expr2.Accept(this, bodyFree);
-        //    bodyFree.Remove(letStatement.Id);
-
-        //    free.UnionWith(bodyFree);
-
-        //    return null;
-        //}
-
         public Void Visit(IfStatement ifStatement, SortedSet<string> free)
         {
             ifStatement.expr.Accept(this, free);
@@ -65,32 +52,6 @@ namespace Evaluator
             return null;
         }
 
-        //public Void Visit(LambdaStatement lambdaStatement, SortedSet<string> free)
-        //{
-        //    var bodyFree = new SortedSet<string>();
-        //    lambdaStatement.Body.Accept(this, bodyFree);
-        //    bodyFree.Remove(lambdaStatement.Id);
-
-        //    free.UnionWith(bodyFree);
-
-        //    return null;
-        //}
-
-        //public Void Visit(ApplicationStatement applicationStatement, SortedSet<string> free)
-        //{
-        //    applicationStatement.Function.Accept(this, free);
-        //    applicationStatement.Argument.Accept(this, free);
-
-        //    return null;
-        //}
-
-        //public Void Visit(TupleStatement tupleStatement, SortedSet<string> free)
-        //{
-        //    tupleStatement.Expr1.Accept(this, free);
-        //    tupleStatement.Expr2.Accept(this, free);
-
-        //    return null;
-        //}
 
         public Void Visit(ListStatement listStatement, SortedSet<string> free)
         {
@@ -109,15 +70,6 @@ namespace Evaluator
 
             return null;
 
-        }
-
-
-
-        public Void Visit(BracketStatement bracketStatement, SortedSet<string> free)
-        {
-            bracketStatement.stmt.Accept(this, free);
-
-            return null;
         }
 
 
@@ -227,7 +179,12 @@ namespace Evaluator
             return null;
         }
 
-        public Void Visit(IntStatement intStatement, SortedSet<string> free)
+        public Void Visit(IntType intType, SortedSet<string> free)
+        {
+            return null;
+        }
+
+        public Void Visit(BoolType boolType, SortedSet<string> free)
         {
             return null;
         }

@@ -7,25 +7,25 @@ namespace Syntax
         Result Visit(SequenceStatement sequenceStatement,AArgmnt arg);
         Result Visit(IdentifierStatement identifierStatement,AArgmnt arg);
         Result Visit(NumStatement numStatement,AArgmnt arg);
-        Result Visit(BracketStatement bracketStatement,AArgmnt arg);
         Result Visit(BinOperatorStatement binOperatorStatement,AArgmnt arg);
         Result Visit(ListStatement listStatement,AArgmnt arg);
         Result Visit(FormalList formalList,AArgmnt arg);
         Result Visit(Declaration declaration,AArgmnt arg);
+        Result Visit(BlockStatement blockStatement,AArgmnt arg);
         Result Visit(Argument argument,AArgmnt arg);
         Result Visit(TypeDeclaration typeDeclaration,AArgmnt arg);
         Result Visit(VoidDeclaration voidDeclaration,AArgmnt arg);
         Result Visit(IfStatement ifStatement,AArgmnt arg);
         Result Visit(IfElseStatement ifElseStatement,AArgmnt arg);
         Result Visit(WhileStatement whileStatement,AArgmnt arg);
-        Result Visit(BlockStatement blockStatement,AArgmnt arg);
         Result Visit(RegularStatement regularStatement,AArgmnt arg);
         Result Visit(Return rreturn,AArgmnt arg);
         Result Visit(VoidReturn voidReturn,AArgmnt arg);
         Result Visit(AssignStatement assignStatement,AArgmnt arg);
         Result Visit(NotStatement notStatement,AArgmnt arg);
         Result Visit(NegativeStatement negativeStatement,AArgmnt arg);
-        Result Visit(IntStatement intStatement,AArgmnt arg);
+        Result Visit(IntType intType,AArgmnt arg);
+        Result Visit(BoolType boolType,AArgmnt arg);
         Result Visit(BoolStatement boolStatement,AArgmnt arg);
         Result Visit(Type type,AArgmnt arg);
     }
@@ -51,6 +51,14 @@ namespace Syntax
         }
     }
 
+    public partial class BlockStatement : Statement
+    {
+        override public Result Accept<Result, AArgmnt>(IExpressionVisitorWithArguments<Result, AArgmnt> visitor, AArgmnt arg)
+        {
+            return visitor.Visit(this, arg);
+        }
+    }
+
     public partial class IdentifierStatement : Statement
     {
         override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
@@ -67,13 +75,6 @@ namespace Syntax
         }
     }
 
-    public partial class BracketStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
 
     public partial class BinOperatorStatement : Statement
     {
@@ -156,13 +157,6 @@ namespace Syntax
         }
     }
 
-    public partial class BlockStatement : Statement
-    {
-        override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
-        {
-            return visitor.Visit(this,arg);
-        }
-    }
 
     public partial class RegularStatement : Statement
     {
@@ -213,11 +207,19 @@ namespace Syntax
             return visitor.Visit(this,arg);
         }
     }
-    public partial class IntStatement : Type
+    public partial class IntType : Type
     {
         override public Result Accept<Result,AArgmnt>(IExpressionVisitorWithArguments<Result,AArgmnt> visitor, AArgmnt arg)
         {
             return visitor.Visit(this,arg);
+        }
+    }
+
+    public partial class BoolType : Type
+    {
+        override public Result Accept<Result, AArgmnt>(IExpressionVisitorWithArguments<Result, AArgmnt> visitor, AArgmnt arg)
+        {
+            return visitor.Visit(this, arg);
         }
     }
     public partial class BoolStatement : Statement
