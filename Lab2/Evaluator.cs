@@ -141,7 +141,8 @@ namespace Evaluator
             BOP_4, // Expected same value type in binary equality operators
             BOP_5, // Expected integers in binary inequality operators
             ID, // Variable not declared
-            ASN, // Expected value in assignment
+            ASN_1, // Expected value in assignment
+            ASN_2,
             CALL_1, // Function not defined
             CALL_2, // Wrong number of arguments in function call
             DECL, // Variable already defined
@@ -158,7 +159,8 @@ namespace Evaluator
             { ErrorCode.BOP_4 , "Expected same value type in binary equality operators" },
             { ErrorCode.BOP_5 , "Expected integers in binary inequality operators" },
             { ErrorCode.ID , "Variable not declared" },
-            { ErrorCode.ASN , "Expected value in assignment" },
+            { ErrorCode.ASN_1 , "Expected value in assignment" },
+            { ErrorCode.ASN_2 , "Wrong type assigned to value" },
             { ErrorCode.CALL_1 , "Function not defined" },
             { ErrorCode.CALL_2 , "Wrong number of arguments in function call" },
             { ErrorCode.DECL , "Variable already defined" },
@@ -289,9 +291,12 @@ namespace Evaluator
                                 var parameters = new Dictionary<string, IValue>();
                                 for (int i = 0; i < ((ListStatement)identifierStatement.list).exprs.Count; i++)
                                 {
+                                   
                                     parameters.Add(((FormalList)function.flist).list[i].id, ((ListStatement)identifierStatement.list).exprs[i].Accept(this));
                                 }
+                                
                                 Environment.CallFunction(parameters);
+                                
                                 function.Accept(this);
                                 //ovde treba pop value
                                 Environment.PopFunction();
@@ -600,7 +605,7 @@ namespace Evaluator
         }
         public IValue Visit(TypeDeclaration typeDeclaration)
         {
-           // Console.WriteLine("TypeFunc STATEMENT");
+            //Console.WriteLine("TypeFunc STATEMENT");
             typeDeclaration.stmt.Accept(this);
             return null;// pointer;
         }
@@ -624,7 +629,7 @@ namespace Evaluator
         }
         public IValue Visit(Return rreturn)
         {
-            Environment.ReturnValue = rreturn.Accept(this);
+            Environment.ReturnValue = rreturn.e.Accept(this);
             return null;
         }
         public IValue Visit(VoidReturn voidReturn)
@@ -645,13 +650,13 @@ namespace Evaluator
             if(result.Type == null)
             {
                 var err = new ErrorMessage();
-                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.ASN, assignStatement));
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.ASN_1, assignStatement));
 
             }
             if(Environment.GetVarValue(assignStatement.id).Type != result.Type)
             {
                 var err = new ErrorMessage();
-                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.ASN, assignStatement));
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.ASN_2, assignStatement));
 
             }
             Environment.UpdateVar(assignStatement.id, result);
@@ -685,7 +690,7 @@ namespace Evaluator
         }
         public IValue Visit(BoolStatement boolStatement)
         {
-            Console.WriteLine("OVDE SAM");
+            
             return new BoolValue (boolStatement.value);// new PointerValue(0); ///??????????????????????????????
         }
         public IValue Visit(Syntax.Type type)

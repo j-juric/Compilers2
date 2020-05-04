@@ -70,18 +70,42 @@ namespace Lab2
                 var source = @"
 void main()
 { 
-    bool x; 
-    int y; 
-    x=true; 
-    y=2; 
-    while(!(-y==-2048)) 
-    { 
-        print(y); 
-        y = y*2;  
-    } 
+    int x;
+    x = 5;
+    x = factorial(x);
+    print(x);
+    x = 6;
+    x = fibonacci(x);
+    print(x);
+    print(func());
+    foo();
+}
+int factorial(int x)
+{
+    if(x==1)
+        return 1;
+    return x * factorial(x-1);
+}
+int fibonacci(int x)
+{
+    if( x==1 || x==0)
+        return x;
+    return fibonacci(x-1) + fibonacci(x-2);
+}
+bool xor(bool a, bool b)
+{
+    return !a&&b || a&&!b;
+}
+int func(){
+    return 777;
+    return 666;
+}
+void foo()
+{   
+    print(1,3,3,7);
 }
 ";
-                source = source.Replace(Environment.NewLine, "");
+                
                 var program = Syntax.ParserUtility.Parse(source);
                 try
                 {

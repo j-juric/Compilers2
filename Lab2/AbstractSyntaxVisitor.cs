@@ -127,6 +127,7 @@ namespace Syntax
     {
         override public Result Accept<Result>(IExpressionVisitor<Result> visitor)
         {
+            
             return visitor.Visit(this);
         }
     }
