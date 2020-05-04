@@ -5,13 +5,13 @@ using System.Reflection.Metadata.Ecma335;
 using Syntax;
 namespace Evaluator
 {
-    public enum ValueType { Number, Pointer, Bool , List}
+    public enum ValueType { Number, Void, Bool}
 
     public interface IValue
     {
         ValueType Type { get; }
 
-        string ToString(EvaluatorEnvironment environment);
+        public string ToString();
     }
 
     public struct NumberValue : IValue
@@ -24,7 +24,7 @@ namespace Evaluator
             Number = number;
         }
 
-        public string ToString(EvaluatorEnvironment environment)
+        public override string ToString()
         {
             return Number.ToString();
         }
@@ -41,9 +41,19 @@ namespace Evaluator
             Bool = _bool;
         }
 
-        public string ToString(EvaluatorEnvironment environment)
+        public override string ToString()
         {
             return Bool.ToString();
+        }
+    }
+
+    public struct VoidValue:IValue
+    {
+        public ValueType Type { get => ValueType.Void; }
+
+        public string ToString(EvaluatorEnvironment environment)
+        {
+            return null;
         }
     }
 
@@ -62,6 +72,12 @@ namespace Evaluator
         public EvaluatorEnvironment()
         {
            
+        }
+
+        public void InitEnvironment() 
+        {
+            this.CallStack.Push(new Dictionary<string, IValue>());
+            this.ReturnValue = null;
         }
 
         public void DeclareFunction(VoidDeclaration function)
@@ -96,6 +112,7 @@ namespace Evaluator
 
         public void AddVar(string id, IValue value)
         {
+            
             this.CallStack.Peek().Add(id, value);
         }
 
@@ -140,13 +157,13 @@ namespace Evaluator
             { ErrorCode.BOP_3 , "Expected booleans in && operator" },
             { ErrorCode.BOP_4 , "Expected same value type in binary equality operators" },
             { ErrorCode.BOP_5 , "Expected integers in binary inequality operators" },
-            { ErrorCode.ID , "Expected value in unary - operator" },
-            { ErrorCode.ASN , "Expected value in unary - operator" },
-            { ErrorCode.CALL_1 , "Expected value in unary - operator" },
-            { ErrorCode.CALL_2 , "Expected value in unary - operator" },
-            { ErrorCode.DECL , "Expected value in unary - operator" },
-            { ErrorCode.IF , "Expected value in unary - operator" },
-            { ErrorCode.WHILE , "Expected value in unary - operator" },
+            { ErrorCode.ID , "Variable not declared" },
+            { ErrorCode.ASN , "Expected value in assignment" },
+            { ErrorCode.CALL_1 , "Function not defined" },
+            { ErrorCode.CALL_2 , "Wrong number of arguments in function call" },
+            { ErrorCode.DECL , "Variable already defined" },
+            { ErrorCode.IF , "Expecting boolean guard in if" },
+            { ErrorCode.WHILE , "Expecting boolean guard in while" },
         };
         public string ErrorOutput(ErrorCode ec, Locatable loc)
         {
@@ -166,6 +183,7 @@ namespace Evaluator
 
     public class EvaluatorVisitor : IExpressionVisitor<IValue>
     {
+
         enum OperatorExpression
         {
             LOGICAL,
@@ -194,6 +212,7 @@ namespace Evaluator
 
         public IValue Visit(IdentifierStatement identifierStatement)
         {
+            //Console.WriteLine("IDENTIFIER STATEMENT");
             if (identifierStatement.list == null)
             {
                 
@@ -203,7 +222,7 @@ namespace Evaluator
                     throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.ID, identifierStatement));
 
                 }
-                identifierStatement.Accept(this);
+                //identifierStatement.id.Accept(this);
                 return Environment.GetVarValue(identifierStatement.id);
             }
             else // if it is a function call
@@ -213,7 +232,7 @@ namespace Evaluator
                     //Print
                     foreach (var e in ((ListStatement)identifierStatement.list).exprs)
                     {
-                        Console.Write(e.Accept(this) + " ");
+                        Console.Write(((IValue)e.Accept(this)).ToString() + " ");
                     }
                     Console.Write("\n");
                     return null;
@@ -249,7 +268,9 @@ namespace Evaluator
                                 function.Accept(this);
                                 //ovde treba pop value
                                 Environment.PopFunction();
-                                return Environment.ReturnValue;
+                                var result = Environment.ReturnValue;
+                                Environment.ReturnValue = null;
+                                return result;
 
                             }
                         }
@@ -274,7 +295,9 @@ namespace Evaluator
                                 function.Accept(this);
                                 //ovde treba pop value
                                 Environment.PopFunction();
-                                return Environment.ReturnValue;
+                                var result = Environment.ReturnValue;
+                                Environment.ReturnValue = null;
+                                return result;
 
                             }
                         }
@@ -294,7 +317,8 @@ namespace Evaluator
             var right = binaryOperatorExpression.right.Accept(this);
 
             var opType = MapOpExpr[binaryOperatorExpression.type];
-
+           
+            
             if (opType == OperatorExpression.INTEGER)
             {
                 if (left.Type == ValueType.Number && right.Type == ValueType.Number)
@@ -348,9 +372,9 @@ namespace Evaluator
                     var y = ((NumberValue)right).Number;
                     switch (binaryOperatorExpression.type)
                     {
-                        case BinOperatorStatement.Type.AND:
+                        case BinOperatorStatement.Type.EQ:
                             return new BoolValue(x == y);
-                        case BinOperatorStatement.Type.OR:
+                        case BinOperatorStatement.Type.NEQ:
                             return new BoolValue(x != y);
                     }
                 }
@@ -360,9 +384,9 @@ namespace Evaluator
                     var y = ((BoolValue)right).Bool;
                     switch (binaryOperatorExpression.type)
                     {
-                        case BinOperatorStatement.Type.AND:
+                        case BinOperatorStatement.Type.EQ:
                             return new BoolValue(x == y);
-                        case BinOperatorStatement.Type.OR:
+                        case BinOperatorStatement.Type.NEQ:
                             return new BoolValue(x != y);
                     }
                 }
@@ -379,6 +403,7 @@ namespace Evaluator
                 {
                     var x = ((NumberValue)left).Number;
                     var y = ((NumberValue)right).Number;
+                    
                     switch (binaryOperatorExpression.type)
                     {
                         case BinOperatorStatement.Type.GR:
@@ -417,10 +442,15 @@ namespace Evaluator
                 {
                     return ifStatement.stmt.Accept(this);
                 }
+                return null;
 
             }
-            var err = new ErrorMessage();
-            throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.IF,ifStatement));
+            else
+            {
+                var err = new ErrorMessage();
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.IF, ifStatement));
+            }
+
         }
         public IValue Visit(IfElseStatement ifElseStatement)
         {
@@ -445,14 +475,14 @@ namespace Evaluator
 
         public IValue Visit(WhileStatement whileStatement)
         {
-            var guard = whileStatement.Accept(this);
+            var guard = whileStatement.expr.Accept(this);
 
             if (guard.Type == ValueType.Bool)
             {
                 while (((BoolValue)guard).Bool != false)
                 {
                     whileStatement.stmt.Accept(this);
-                    guard = whileStatement.Accept(this);
+                    guard = whileStatement.expr.Accept(this);
                 }
                 return null;
             }
@@ -472,23 +502,57 @@ namespace Evaluator
 
         public IValue Visit(DeclarationSequence declarationSequence)
         {
-            if (declarationSequence.head != null) 
-                declarationSequence.head.Accept(this);
-            return declarationSequence.tail.Accept(this);
+            //Console.WriteLine("DECLARATION SEQUENCE STATEMENT");
+            var declaration = declarationSequence;
+            while(declaration != null)
+            {
+                var typeName = declaration.tail.GetType().Name;
+
+                if (typeName == "VoidDeclaration") 
+                    Environment.DeclareFunction((VoidDeclaration)declaration.tail);
+                else
+                    Environment.DeclareFunction((TypeDeclaration)declaration.tail);
+                declaration = (DeclarationSequence)declaration.head;
+
+            }
+            if (Environment.FunctionDict.ContainsKey("main"))
+            {
+                //Console.WriteLine("Main exists");
+                VoidDeclaration main = (VoidDeclaration)Environment.FunctionDict["main"].Item1;
+                Environment.InitEnvironment();
+                main.Accept(this);
+                Environment.PopFunction();
+                return null;
+            }
+            else
+            {
+                //BACI GRESKU
+                return null;
+            }
         }
 
         public IValue Visit(SequenceStatement sequenceStatement)
         {
-            if (sequenceStatement.head != null) sequenceStatement.head.Accept(this);
-            return sequenceStatement.tail.Accept(this);
+            //Console.WriteLine("SEQUENCE STATEMENT");
+            if (sequenceStatement.head != null)
+            {
+                if (Environment.ReturnValue != null)
+                    return null;
+                ((SequenceStatement)sequenceStatement.head).Accept(this);
+            }
+            if (Environment.ReturnValue != null)
+                return null;
+            //Console.WriteLine("SEQUENCE STATEMENT TAIL");
+            sequenceStatement.tail.Accept(this);
+
+            return null;
         }
 
         public IValue Visit(NumStatement numStatement)
         {
+            
             return new NumberValue(numStatement.num);
         }
-
-
 
         public IValue Visit(ListStatement listStatement)
         {
@@ -503,11 +567,12 @@ namespace Evaluator
 
             return null;
 
-        }  //valjda je dobro...
+        }  
 
         public IValue Visit(FormalList formalList)
         {
-            return formalList.Accept(this);
+            // return formalList.Accept(this);
+            return null;
         }
 
         public IValue Visit(Declaration declaration)
@@ -518,101 +583,122 @@ namespace Evaluator
         public IValue Visit(Argument argument)
         {
             //var current = Environment.GetCurrentFrame();
+            //Console.WriteLine("ARGUMENT STATEMENT");
             if (Environment.ContainsVarInCurrCall(argument.id))
             {
                 var err = new ErrorMessage();
                 throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.DECL, argument));
 
             }
-            typeof(argument.type)
-            Environment.AddVar(argument.id, (argument.type))
-            //var pointer = Environment.Allocate();
-            //current[argument.id] = pointer;
+            
+            var typeName = ((Syntax.Type)argument.type).GetType().Name;
+            IValue value = new NumberValue(0);
+            if (typeName != "IntType") value = new BoolValue(false);
+            Environment.AddVar(argument.id, value);
+
             return null; // new PointerValue(0);
         }
-
         public IValue Visit(TypeDeclaration typeDeclaration)
         {
-            var current = Environment.CallStack.Peek();
-            var context = new Dictionary<string, IValue>();
-            var free = new SortedSet<string>();
-            typeDeclaration.Accept(FreeVariablesVisitor.Instance, free);
-
-            foreach (var identifier in free)
-            {
-                context[identifier] = current[identifier];
-            }
-
-            //var pointer = null; // Environment.Allocate();
-            //Environment.Store[pointer.Pointer] = new HeapClosure(context, typeDeclaration.id, typeDeclaration.stmt);
+           // Console.WriteLine("TypeFunc STATEMENT");
+            typeDeclaration.stmt.Accept(this);
             return null;// pointer;
         }
-
         public IValue Visit(VoidDeclaration voidDeclaration)
         {
-            throw new NotImplementedException();
+            //Console.WriteLine("VoidFunc STATEMENT");
+            voidDeclaration.stmt.Accept(this);
+            return null;
         }
-
-
         public IValue Visit(BlockStatement blockStatement)
         {
-            throw new NotImplementedException();
+            //Console.WriteLine("Block Statement");
+            blockStatement.stmt.Accept(this);
+            return null;
         }
         public IValue Visit(RegularStatement regularStatement)
         {
-            throw new NotImplementedException();
+            //Console.WriteLine("Regular Statement");
+            regularStatement.expr.Accept(this);
+            return null;
         }
         public IValue Visit(Return rreturn)
         {
-            throw new NotImplementedException();
+            Environment.ReturnValue = rreturn.Accept(this);
+            return null;
         }
         public IValue Visit(VoidReturn voidReturn)
         {
-            throw new NotImplementedException();
+            Environment.ReturnValue = new VoidValue();
+            return null;
         }
         public IValue Visit(AssignStatement assignStatement)
         {
-            throw new NotImplementedException();
+            //Console.WriteLine("ASSIGN STATEMENT");
+            if (!Environment.ContainsVarInCurrCall(assignStatement.id))
+            {
+                var err = new ErrorMessage();
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.ID, assignStatement));
+
+            }
+            IValue result = assignStatement.s.Accept(this);
+            if(result.Type == null)
+            {
+                var err = new ErrorMessage();
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.ASN, assignStatement));
+
+            }
+            if(Environment.GetVarValue(assignStatement.id).Type != result.Type)
+            {
+                var err = new ErrorMessage();
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.ASN, assignStatement));
+
+            }
+            Environment.UpdateVar(assignStatement.id, result);
+            return null;
         }
-
-
         public IValue Visit(NotStatement notStatement)
         {
-            var s = notStatement.s1.Accept(this);
-            var x = ((BoolValue)s).Bool;
+            IValue result = notStatement.s1.Accept(this);
+            if (result.Type != ValueType.Bool)
+            {
+                var err = new ErrorMessage();
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.UOP_1, notStatement));
+
+            }
+            var x = ((BoolValue)result).Bool;
 
             return new BoolValue(!x);
         }
-
         public IValue Visit(NegativeStatement negativeStatement)
         {
-            var s = negativeStatement.s1.Accept(this);
-            var x = ((NumberValue)s).Number;
+            var result = negativeStatement.s1.Accept(this);
+            var x = ((NumberValue)result).Number;
+            if (result.Type != ValueType.Number)
+            {
+                var err = new ErrorMessage();
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.UOP_1, negativeStatement));
+
+            }
 
             return new NumberValue(0 - x);
         }
-
-
-
         public IValue Visit(BoolStatement boolStatement)
         {
-            return null;// new PointerValue(0); ///??????????????????????????????
+            Console.WriteLine("OVDE SAM");
+            return new BoolValue (boolStatement.value);// new PointerValue(0); ///??????????????????????????????
         }
-
-
         public IValue Visit(Syntax.Type type)
         {
             return null;// new PointerValue(0); ////??????????????????????????
         }
-
         public IValue Visit(IntType intType)
         {
-            throw new NotImplementedException();
+            return null;
         }
-
         public IValue Visit(BoolType boolType)
         {
-            throw new NotImplementedException();
+            return null;
         }
     }
 

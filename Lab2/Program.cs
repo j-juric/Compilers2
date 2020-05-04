@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Evaluator;
+using System;
 using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -9,7 +10,7 @@ namespace Lab2
     {
         static void Main(string[] args)
         {
-            if (true)
+            if (false)
             {
                 if (args.Length < 1)
                 {
@@ -66,143 +67,31 @@ namespace Lab2
             }
             else
             {
-                String source = @"int j43()
-{
-  {
-    return MZG(false, RG);
-    bool f3a;
-    bool h;
-  }
+                var source = @"
+void main()
+{ 
+    bool x; 
+    int y; 
+    x=true; 
+    y=2; 
+    while(!(-y==-2048)) 
+    { 
+        print(y); 
+        y = y*2;  
+    } 
 }
-int uG()
-{
-}
-bool Z(int QIg, bool H, bool ek)
-{
-  {
-    {
-    }
-    if (true)
-    {
-    }
-    else
-    {
-      if (!(-yfJ||!-true))
-      {
-        return j;
-        bool D;
-      }
-      else
-      {
-      }
-    }
-    bool sx;
-  }
-  while (Bl = fE(4, Fda = false, kwl())/T3Q(J*25, p8A, -Ga(((vCx = 6)!=true)-(!237-okW))))
-  {
-    bool qWA;
-    {
-      {
-        if (o = Fn(Rj))
-        {
-          false;
-          {
-            while (c)
-            {
-              int s8;
-            }
-          }
-          return !y(oI(), 5)==true;
-        }
-        else
-        {
-        }
-      }
-      int d;
-    }
-  }
-  if (m(85==175, false, f))
-  {
-    {
-      if (aI()+727||false)
-      {
-        while (76)
-        {
-          {
-            return V00*((2<=!Hnr(rn, true, IW = FD))+(y = tc = Aks)>Iu);
-            while (J(K, jSV, false))
-            {
-              {
+";
+                source = source.Replace(Environment.NewLine, "");
+                var program = Syntax.ParserUtility.Parse(source);
+                try
                 {
-                  false;
-                  false;
-                  return i = -81;
-                }
-                while (n())
-                {
-                  return I = !(j = false);
-                  while (h(WJJ = false))
-                  {
-                    {
-                      while (FdP(XlM(t), v(true, Q||Mq(171, !131, ZY = V), Hg = -J(-((h = j(true))-WV), false, rVx = yL(false)))))
-                      {
-                        6;
-                        int czb;
-                      }
-                      bool Z;
-                      return I;
-                    }
-                  }
-                  {
-                    return false;
-                    tWD(((e4T(xv(true, Q(-false), true), 64, false)>=K)-D(true==true))*(u = Hh<=(JWp = Uq)));
-                  }
-                }
-              }
-            }
-          }
-        }
-        while (-da(mHV = true, -(T!=ZUZ(NH = Kv = cUF, k(false<(h = 60)), !false))))
-        {
-        }
-      }
-      else
-      {
-      }
-    }
-    int fV;
-    4;
-  }
-  else
-  {
-  }
-}";
-                
-                    var program = Syntax.ParserUtility.Parse(source);
-                if (program != null)
-                {
-                    var pretty = program.Pretty();
-                    var strip_origi = source.Replace(" ", "");
-                    strip_origi = strip_origi.Replace(Environment.NewLine, "");
-
-                    var strip_pretty = pretty.Replace(" ", "");
-                    strip_pretty = strip_pretty.Replace("\n", "");
-
-                    var new_pretty = Syntax.ParserUtility.Parse(source).Pretty();
-
-                    if (strip_origi.Equals(strip_pretty) && pretty.Equals(new_pretty))
-                        Console.WriteLine("True");
-                    else
-                    {
-                        Console.WriteLine("False");
-                    }
-
+                 program.Accept(new EvaluatorVisitor());
 
                 }
-                else
+                catch(EvaluationError e)
                 {
-                    Console.WriteLine("False");
-                }
+                  Console.WriteLine(e.Message);
+                }                
 
             }
             
