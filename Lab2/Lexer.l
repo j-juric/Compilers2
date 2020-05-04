@@ -7,8 +7,8 @@ digit   [0-9]
 alphanum    {alpha}|{digit}
 %%
 
-" "|\r|\n       { }
-//.*$           { }
+" "|\r|\n|\t|\r\n  { }
+\/\/.*$           { }
 
 "."             { return (int) Tokens.DOT; }
 ";"             { return (int) Tokens.SEMI; }

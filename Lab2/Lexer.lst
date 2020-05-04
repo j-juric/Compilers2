@@ -18,8 +18,8 @@ digit   [0-9]
 alphanum    {alpha}|{digit}
 %%
 
-" "|\r|\n       { }
-//.*$           { }
+" "|\r|\n|\t      { }
+\/\/.*$           { }
 
 "let"           { return (int) Tokens.LET; }
 "in"            { return (int) Tokens.IN; }

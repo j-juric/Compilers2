@@ -32,32 +32,21 @@ namespace Lab2
                     }
 
                     string source = input.ReadToEnd();
-                    
+
+                    source = source.Replace("\n", "");
+                    source = source.Replace("\t", "");
+                    source = source.Replace("\r", "");
+                    source = source.Replace("\r\n", "");
+                    source = source.Replace(Environment.NewLine, "");
 
                     var program = Syntax.ParserUtility.Parse(source);
-                    var pretty = program.Pretty();
-                    var strip_origi = source.Replace(" ", "");
-                    strip_origi = strip_origi.Replace("\n", "");
-                    strip_origi = strip_origi.Replace("\r", "");
-                    strip_origi = strip_origi.Replace("\r\n", "");
-                    strip_origi = strip_origi.Replace(Environment.NewLine, "");
-
-                    var strip_pretty = pretty.Replace(" ", "");
-                    strip_pretty = strip_pretty.Replace("\n", "");
-                    strip_pretty = strip_pretty.Replace("\r", "");
-                    strip_pretty = strip_pretty.Replace("\r\n", "");
-
-                    var new_pretty = Syntax.ParserUtility.Parse(source).Pretty();
-
-
-                    // strip_origi.Equals(strip_pretty) Checks for the 1st requirement  strip(p) == strip(pretty(parse(p)))
-                    //pretty.Equals(new_pretty) Checks for the 2nd requirement pretty(parse(p)) == pretty(parse(pretty(parse(p))))
-                    if (strip_origi.Equals(strip_pretty) && pretty.Equals(new_pretty))
-                        Console.WriteLine("True");
-                    else
+                    if (program == null)
                     {
-                        Console.WriteLine("False");
+                        return;
                     }
+
+                     program.Accept(new EvaluatorVisitor());
+
 
                 }
                 catch (Exception e)
@@ -68,45 +57,35 @@ namespace Lab2
             else
             {
                 var source = @"
-void main()
-{ 
-    int x;
-    x = 5;
-    x = factorial(x);
-    print(x);
-    x = 6;
-    x = fibonacci(x);
-    print(x);
-    print(func());
-    foo();
-}
-int factorial(int x)
-{
-    if(x==1)
-        return 1;
-    return x * factorial(x-1);
-}
-int fibonacci(int x)
-{
-    if( x==1 || x==0)
-        return x;
-    return fibonacci(x-1) + fibonacci(x-2);
-}
-bool xor(bool a, bool b)
-{
-    return !a&&b || a&&!b;
-}
-int func(){
-    return 777;
-    return 666;
-}
-void foo()
-{   
-    print(1,3,3,7);
-}
-";
+// can't work with comments
+int main(){
+	int x;
+	int y;
+	int z;
+	x = 111;
+	y = 222;
+	z = 333;
+	if(x <= y - 80){
+		if(56 > z || z >= y){
+			while(x < y){
+				print(x);
+				x = x + 10;
+			}
+		}
+	}
+  return 1;
+}";
                 
+                source= source.Replace("\n", "");
+                source= source.Replace("\t", "");
+                source= source.Replace("\r", "");
+                source= source.Replace("\r\n", "");
+                source= source.Replace(Environment.NewLine, "");
                 var program = Syntax.ParserUtility.Parse(source);
+                if (program == null)
+                {
+                   return;
+                }
                 try
                 {
                  program.Accept(new EvaluatorVisitor());

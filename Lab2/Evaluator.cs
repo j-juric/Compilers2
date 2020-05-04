@@ -523,7 +523,14 @@ namespace Evaluator
             if (Environment.FunctionDict.ContainsKey("main"))
             {
                 //Console.WriteLine("Main exists");
-                VoidDeclaration main = (VoidDeclaration)Environment.FunctionDict["main"].Item1;
+                
+                var main = Environment.FunctionDict["main"].Item1;
+                var typeName = main.GetType().Name;
+                if (typeName== "VoidDeclaration")
+                    main = (VoidDeclaration)Environment.FunctionDict["main"].Item1;
+                else
+                    main = (TypeDeclaration)Environment.FunctionDict["main"].Item1;
+         
                 Environment.InitEnvironment();
                 main.Accept(this);
                 Environment.PopFunction();
