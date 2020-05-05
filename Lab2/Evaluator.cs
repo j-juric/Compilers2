@@ -145,6 +145,7 @@ namespace Evaluator
             ASN_2,
             CALL_1, // Function not defined
             CALL_2, // Wrong number of arguments in function call
+            CALL_3,
             DECL, // Variable already defined
             IF, // Expecting boolean guard in if
             WHILE, // Expecting boolean guard in while
@@ -163,13 +164,14 @@ namespace Evaluator
             { ErrorCode.ASN_2 , "Wrong type assigned to value" },
             { ErrorCode.CALL_1 , "Function not defined" },
             { ErrorCode.CALL_2 , "Wrong number of arguments in function call" },
+            { ErrorCode.CALL_3 , "Function returns wrong type" },
             { ErrorCode.DECL , "Variable already defined" },
             { ErrorCode.IF , "Expecting boolean guard in if" },
             { ErrorCode.WHILE , "Expecting boolean guard in while" },
         };
         public string ErrorOutput(ErrorCode ec, Locatable loc)
         {
-            return $"Error ({ec.ToString()}) - Line :{loc.line.ToString()}, Column:{loc.column.ToString()} | {errorDescription[ec]}";
+            return $"INTERPRETATION ERROR: ({ec.ToString()}) - Line :{loc.line.ToString()}, Column:{loc.column.ToString()} | {errorDescription[ec]}";
         }
     }
 
@@ -271,7 +273,7 @@ namespace Evaluator
                                 //ovde treba pop value
                                 Environment.PopFunction();
                                 var result = Environment.ReturnValue;
-                                Environment.ReturnValue = null;
+                                Environment.ReturnValue = null;                                
                                 return result;
 
                             }
@@ -302,6 +304,12 @@ namespace Evaluator
                                 Environment.PopFunction();
                                 var result = Environment.ReturnValue;
                                 Environment.ReturnValue = null;
+                                var funcType = (function.type.GetType().Name == "IntType") ? ValueType.Number : ValueType.Bool;
+                                if(result == null || result.Type != funcType)
+                                {
+                                    var err = new ErrorMessage();
+                                    throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.CALL_3, identifierStatement));
+                                }
                                 return result;
 
                             }
@@ -613,7 +621,12 @@ namespace Evaluator
         public IValue Visit(TypeDeclaration typeDeclaration)
         {
             //Console.WriteLine("TypeFunc STATEMENT");
-            typeDeclaration.stmt.Accept(this);
+            if (typeDeclaration.stmt!=null)typeDeclaration.stmt.Accept(this);
+            else
+            {
+                var err = new ErrorMessage();
+                throw new EvaluationError(err.ErrorOutput(ErrorMessage.ErrorCode.CALL_3, typeDeclaration));
+            }
             return null;// pointer;
         }
         public IValue Visit(VoidDeclaration voidDeclaration)
@@ -667,7 +680,7 @@ namespace Evaluator
 
             }
             Environment.UpdateVar(assignStatement.id, result);
-            return null;
+            return result;
         }
         public IValue Visit(NotStatement notStatement)
         {

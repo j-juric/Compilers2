@@ -10,7 +10,7 @@ namespace Lab2
     {
         static void Main(string[] args)
         {
-            if (false)
+            if (true)
             {
                 if (args.Length < 1)
                 {
@@ -33,11 +33,11 @@ namespace Lab2
 
                     string source = input.ReadToEnd();
 
-                    source = source.Replace("\n", "");
-                    source = source.Replace("\t", "");
-                    source = source.Replace("\r", "");
-                    source = source.Replace("\r\n", "");
-                    source = source.Replace(Environment.NewLine, "");
+                    //source = source.Replace("\n", "");
+                    //source = source.Replace("\t", "");
+                    //source = source.Replace("\r", "");
+                    //source = source.Replace("\r\n", "");
+                    //source = source.Replace(Environment.NewLine, "");
 
                     var program = Syntax.ParserUtility.Parse(source);
                     if (program == null)
@@ -56,25 +56,7 @@ namespace Lab2
             }
             else
             {
-                var source = @"
-// can't work with comments
-int main(){
-	int x;
-	int y;
-	int z;
-	x = 111;
-	y = 222;
-	z = 333;
-	if(x <= y - 80){
-		if(56 > z || z >= y){
-			while(x < y){
-				print(x);
-				x = x + 10;
-			}
-		}
-	}
-  return 1;
-}";
+                var source = @"void main(){int x;x=f();}int f(){}";
                 
                 source= source.Replace("\n", "");
                 source= source.Replace("\t", "");

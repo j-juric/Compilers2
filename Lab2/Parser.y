@@ -95,8 +95,8 @@ Stmt1 :  Stmt2				{ $$ = $1; }
  | Stmt4					{ $$ = $1; }
  ;
 
-Stmt2 : "if" "(" Expr1 ")" Stmt4			{ $$ = new IfStatement($3, $5); $$.SetLocation(@1); }
-  | "if" "(" Expr1 ")" Stmt4 "else" Stmt4	{ $$ = new IfElseStatement($3, $5, $7); $$.SetLocation(@1); }
+Stmt2 : "if" "(" Expr1 ")" Stmt1			{ $$ = new IfStatement($3, $5); $$.SetLocation(@1); }
+  | "if" "(" Expr1 ")" Stmt1 "else" Stmt1	{ $$ = new IfElseStatement($3, $5, $7); $$.SetLocation(@1); }
   ;
 
 Stmt3 : "while" "(" Expr1 ")" Stmt4			{ $$ = new WhileStatement($3, $5); $$.SetLocation(@1); }

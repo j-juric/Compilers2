@@ -1,10 +1,10 @@
 
 // ==========================================================================
-//  GPPG error listing for yacc source file <Parser.y - 4/30/2020 6:43:18 PM>
+//  GPPG error listing for yacc source file <Parser.y - 5/4/2020 9:21:48 PM>
 // ==========================================================================
 //  Version:  1.5.2
 //  Machine:  DESKTOP-BURIB4I
-//  DateTime: 4/30/2020 6:43:31 PM
+//  DateTime: 5/4/2020 9:22:56 PM
 //  UserName: jovan
 // ==========================================================================
 
@@ -24,12 +24,7 @@
 %token <value> ID
 %token <value> NUM
 %token <value> ERR
-$token <value> BOOLVAL
-//----^^----^^
-// Error: This character is invalid in this context
-// Error: Bad separator character in list
-// Error: Bad separator character in list
-// ------------------------------------------------
+%token <value> BOOLVAL
 
 %token LET "let"
 %token IN "in"
@@ -75,6 +70,11 @@ $token <value> BOOLVAL
 %type <T> Type
 
 %%
+// Warning: Terminating Stmt2 fixes the following size-1 NonTerminal set
+   // {Stmt2}
+// Error: There are 1 non-terminating NonTerminal Symbols
+   //  {Stmt2}
+// ---------------------------------------------------------------------
 
 P : Decl0 EOF                {  Program = $1; } 
   ;
@@ -87,8 +87,8 @@ Decl : Type ID "(" FormalList1 ")" "{" Stmt0 "}"    {  $$ = new TypeDeclaration(
   | "void" ID "(" FormalList1 ")" "{" Stmt0 "}"		{  $$ = new VoidDeclaration($2,new FormalList($4),$7); $$.SetLocation(@1); }
   ;
 
-Type : "int"				{ $$ = new IntStatement(); $$.SetLocation(@1); }
-  | "bool"					{ $$ = new BoolStatement(); $$.SetLocation(@1); }
+Type : "int"				{ $$ = new IntType(); $$.SetLocation(@1); }
+  | "bool"					{ $$ = new BoolType(); $$.SetLocation(@1); }
   ;
 
 FormalList1 : FormalList2   { $$ = $1; }
@@ -111,8 +111,8 @@ Stmt1 :  Stmt2				{ $$ = $1; }
  | Stmt4					{ $$ = $1; }
  ;
 
-Stmt2 : "if" "(" Expr1 ")" Stmt4			{ $$ = new IfStatement($3, $5); $$.SetLocation(@1); }
-  | "if" "(" Expr1 ")" Stmt4 "else" Stmt4	{ $$ = new IfElseStatement($3, $5, $7); $$.SetLocation(@1); }
+Stmt2 : "if" "(" Expr1 ")" Stmt2			{ $$ = new IfStatement($3, $5); $$.SetLocation(@1); }
+  | "if" "(" Expr1 ")" Stmt2 "else" Stmt2	{ $$ = new IfElseStatement($3, $5, $7); $$.SetLocation(@1); }
   ;
 
 Stmt3 : "while" "(" Expr1 ")" Stmt4			{ $$ = new WhileStatement($3, $5); $$.SetLocation(@1); }
