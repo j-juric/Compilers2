@@ -10,7 +10,7 @@ namespace Lab2
     {
         static void Main(string[] args)
         {
-            if (true)
+            if (false)
             {
                 if (args.Length < 1)
                 {
@@ -44,8 +44,8 @@ namespace Lab2
                     {
                         return;
                     }
-
-                     program.Accept(new EvaluatorVisitor());
+                    program.Accept(new DesugarVisitor());
+                    program.Accept(new EvaluatorVisitor());
 
 
                 }
@@ -56,13 +56,16 @@ namespace Lab2
             }
             else
             {
-                var source = @"void main(){int x;x=f();}int f(){}";
+                var source = @"void main() {
+
+}
+";
                 
-                source= source.Replace("\n", "");
-                source= source.Replace("\t", "");
-                source= source.Replace("\r", "");
-                source= source.Replace("\r\n", "");
-                source= source.Replace(Environment.NewLine, "");
+                //source= source.Replace("\n", "");
+                //source= source.Replace("\t", "");
+                //source= source.Replace("\r", "");
+                //source= source.Replace("\r\n", "");
+                //source= source.Replace(Environment.NewLine, "");
                 var program = Syntax.ParserUtility.Parse(source);
                 if (program == null)
                 {
@@ -70,8 +73,8 @@ namespace Lab2
                 }
                 try
                 {
+                 program.Accept(new DesugarVisitor());
                  program.Accept(new EvaluatorVisitor());
-
                 }
                 catch(EvaluationError e)
                 {
