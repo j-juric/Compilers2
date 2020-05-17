@@ -42,10 +42,12 @@ namespace Lab2
                     var program = Syntax.ParserUtility.Parse(source);
                     if (program == null)
                     {
+                        Console.WriteLine("Parsing failed");
                         return;
                     }
                     program.Accept(new DesugarVisitor());
-                    program.Accept(new EvaluatorVisitor());
+                    program.Accept(new TypeCheckerVisitor());
+                    Console.WriteLine("pass");
 
 
                 }
@@ -56,8 +58,16 @@ namespace Lab2
             }
             else
             {
-                var source = @"void main() {
-
+                var source = @"
+void main() {
+  int x;
+  x = 4;
+  {
+    int x;
+    x = 5;
+    print(x);
+  }
+  print(x);
 }
 ";
                 
@@ -73,8 +83,9 @@ namespace Lab2
                 }
                 try
                 {
-                 program.Accept(new DesugarVisitor());
-                 program.Accept(new EvaluatorVisitor());
+                     program.Accept(new DesugarVisitor());
+                     program.Accept(new TypeCheckerVisitor());
+                     Console.WriteLine("pass");
                 }
                 catch(EvaluationError e)
                 {

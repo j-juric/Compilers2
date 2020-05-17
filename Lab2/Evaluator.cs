@@ -145,6 +145,7 @@ namespace Evaluator
     public class EvaluatorVisitor : IExpressionVisitor<IValue>
     {
 
+        public EvaluatorEnvironment Environment = new EvaluatorEnvironment();
         enum OperatorExpression
         {
             LOGICAL,
@@ -153,7 +154,6 @@ namespace Evaluator
             INEQUALITY
         }
           
-        public EvaluatorEnvironment Environment = new EvaluatorEnvironment();
 
         Dictionary<BinOperatorStatement.Type, OperatorExpression> MapOpExpr = new Dictionary<BinOperatorStatement.Type, OperatorExpression>()
         {

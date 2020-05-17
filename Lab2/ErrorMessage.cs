@@ -19,6 +19,7 @@ namespace Lab2
             ID, // Variable not declared
             ASN_1, // Expected value in assignment
             ASN_2,
+            ASN_3,
             CALL_1, // Function not defined
             CALL_2, // Wrong number of arguments in function call
             CALL_3,
@@ -37,15 +38,16 @@ namespace Lab2
             { ErrorCode.BOP_5 , "Expected integers in binary inequality operators" },
             { ErrorCode.ID , "Variable not declared" },
             { ErrorCode.ASN_1 , "Expected value in assignment" },
-            { ErrorCode.ASN_2 , "Wrong type assigned to value" },
+            { ErrorCode.ASN_2 , "Declared type not matching type of value in assignment" },
+            { ErrorCode.ASN_3 , "Return value doesn't match function type" },
             { ErrorCode.CALL_1 , "Function not defined" },
             { ErrorCode.CALL_2 , "Wrong number of arguments in function call" },
-            { ErrorCode.CALL_3 , "Function returns wrong type" },
+            { ErrorCode.CALL_3 , "Wrong argument type in function call" },
             { ErrorCode.DECL , "Variable already defined" },
             { ErrorCode.IF , "Expecting boolean guard in if" },
             { ErrorCode.WHILE , "Expecting boolean guard in while" },
         };
-        public string ErrorOutput(ErrorCode ec, Locatable loc)
+        public virtual string ErrorOutput(ErrorCode ec, Locatable loc)
         {
             return $"INTERPRETATION ERROR: ({ec.ToString()}) - Line :{loc.line.ToString()}, Column:{loc.column.ToString()} | {errorDescription[ec]}";
         }
