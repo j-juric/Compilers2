@@ -10,7 +10,7 @@ namespace Lab2
     {
         static void Main(string[] args)
         {
-            if (false)
+            if (true)
             {
                 if (args.Length < 1)
                 {
